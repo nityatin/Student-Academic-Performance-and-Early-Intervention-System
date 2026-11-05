@@ -1,0 +1,29 @@
+# All passwords come from the .env file next to this one (copy .env.example to .env).
+# Both database ports are bound to 127.0.0.1, so only this computer can reach them.
+services:
+  postgres:
+    image: postgres:16
+    container_name: sapeis-postgres
+    environment:
+      POSTGRES_USER: sapeis_admin            # owner account: creates the schema, never used by the web app
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?Set POSTGRES_ADMIN_PASSWORD in .env}
+      POSTGRES_DB: sapeis
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Set APP_DB_PASSWORD in .env}   # read by db/04_app_role.sql
+    ports: ["127.0.0.1:5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d:ro
+  mongo:
+    image: mongo:7
+    container_name: sapeis-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: sapeis_root   # admin account, never used by the web app
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Set MONGO_ROOT_PASSWORD in .env}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD:?Set MONGO_APP_PASSWORD in .env}   # read by mongo/01_init.js
+    ports: ["127.0.0.1:27017:27017"]
+    volumes:
+      - mongodata:/data/db
+      - ./mongo:/docker-entrypoint-initdb.d:ro
+volumes:
+  pgdata:
+  mongodata:
