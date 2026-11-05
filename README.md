@@ -29,7 +29,7 @@ Reset all data (also needed after changing passwords or pulling new db/ or mongo
 
 | Account | Used by | Rights |
 |---|---|---|
-| sapeis_admin (Postgres), sapeis_root (Mongo) | You, for setup and the report scripts | Full |
+| sapeis_admin (Postgres), sapeis_root (Mongo) | Used by us for setup and the report scripts | Full |
 | sapeis_app (Postgres and Mongo) | The web app only | Postgres: SELECT on most tables, INSERT/UPDATE on risk and interventions, INSERT on audit log; no DDL, no DELETE. Mongo: read/write on the sapeis database only |
 
 Both database ports are bound to 127.0.0.1, so only this computer can connect.
